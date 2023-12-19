@@ -1,18 +1,18 @@
 {
-	"include": ["."],
-	"exclude": ["node_modules", "dist"],
-	"compilerOptions": {
-		"jsx": "react-jsx",
-		"baseUrl": ".",
-		"declaration": true,
-		"lib": ["DOM", "ESNext"],
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
-		"esModuleInterop": true,
-		"noUnusedLocals": false,
-		"noUnusedParameters": false,
-		"sourceMap": true,
-		"strict": true,
-		"target": "ESNext"
-	}
+  "include": ["."],
+  "exclude": ["node_modules", "dist"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "declaration": true,
+    "lib": ["DOM", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ESNext"
+  }
 }
