@@ -1,0 +1,21 @@
+{
+  "textures": {
+    "sym-01": "textures/symbols/sym-01.png",
+    "sym-02": "textures/symbols/sym-02.png",
+    "sym-03": "textures/symbols/sym-03.png",
+    "sym-04": "textures/symbols/sym-04.png",
+    "sym-05": "textures/symbols/sym-05.png",
+    "sym-06": "textures/symbols/sym-06.png",
+    "sym-07": "textures/symbols/sym-07.png",
+    "sym-08": "textures/symbols/sym-08.png"
+  },
+  "spineAnimations": [
+    "animations/sym-0/sym-0.json",
+    "animations/sym-01/sym-01.json",
+    "animations/sym-02/sym-02.json",
+    "animations/sym-03/sym-03.json",
+    "animations/sym-04/sym-04.json",
+    "animations/sym-05/sym-05.json",
+    "animations/sym-06/sym-06.json"
+  ]
+}
