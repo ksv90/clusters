@@ -12,6 +12,8 @@ export class World {
 
   public root = new Container();
 
+  public testContainer = new Container();
+
   constructor(props?: WorldProps) {
     const { canvasWidth = 1920, canvasHeight = 1920 } = props ?? {};
     this.root.position.set(canvasWidth / 2, canvasHeight / 2);

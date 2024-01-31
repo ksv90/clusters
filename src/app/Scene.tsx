@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { Game, GameOptions } from '../game';
 import { createMachineConfig } from '../states';
@@ -8,13 +8,14 @@ export type SceneOption = GameOptions['scene'];
 
 export type SceneProps = {
   readonly option: SceneOption;
+  readonly showTestContainer: boolean;
 };
 
 export function Scene(props: SceneProps) {
-  const { option } = props;
+  const { option, showTestContainer } = props;
 
   const container = useRef<HTMLDivElement>(null);
-  const game = new Game({ scene: option });
+  const game = useMemo(() => new Game({ scene: option }), [option]);
 
   useEffect(() => {
     if (!container.current) throw new Error('container error');
@@ -25,6 +26,10 @@ export function Scene(props: SceneProps) {
       game.stop();
     };
   }, [option]);
+
+  useEffect(() => {
+    game.toggleTestContainer(showTestContainer);
+  }, [showTestContainer]);
 
   const refreshClickHandler = () => {
     game.next();

@@ -85,4 +85,8 @@ export class Game<TEventObject extends GameEventObject> {
         console.log(error);
       });
   };
+
+  public toggleTestContainer(show: boolean) {
+    this.context.world.testContainer.visible = show;
+  }
 }

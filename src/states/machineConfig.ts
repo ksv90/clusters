@@ -1,7 +1,7 @@
 import { StateMachine } from '@xstate/fsm';
 
 import { asyncSeries, Context, GameEventObject, series, ServiceConfig, transition } from '../game';
-import { clear, createGrid, loadData, win } from './actions';
+import { clear, createGrid, loadAssets, loadData, win } from './actions';
 
 export type GameState = 'init' | 'load' | 'win';
 
@@ -16,6 +16,7 @@ export const createMachineConfig = <TContext extends Context>(): ServiceConfig<T
     states: {
       init: {
         entry: [series(createGrid), transition('COMPLETE')],
+        exit: [asyncSeries(loadAssets)],
         on: {
           COMPLETE: 'load',
         },

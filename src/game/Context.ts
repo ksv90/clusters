@@ -1,4 +1,5 @@
-import { Application } from 'pixi.js';
+import { Application, Loader, utils } from 'pixi.js';
+import { SpineParser } from 'pixi-spine';
 import { ServerWin } from 'src/server/types';
 
 import { ResizeManager } from './ResizeManager';
@@ -55,6 +56,34 @@ export class Context {
     this.app.stage.addChild(this.world.root);
 
     this.resizeManager = new ResizeManager(this.app, this.props);
+
+    Loader.registerPlugin(SpineParser);
+  }
+
+  public async loadAssets(configUrl: string): Promise<void> {
+    type Config = {
+      textures?: Readonly<Record<string, string>>;
+      spineAnimations?: ReadonlyArray<string>;
+    };
+    const configData = await globalThis.fetch(configUrl);
+    const config = (await configData.json()) as Config;
+    const loader = Loader.shared;
+
+    if (config.textures) {
+      Object.entries(config.textures).forEach(([key, textureUrl]) => {
+        loader.add(key, textureUrl);
+      });
+    }
+    config.spineAnimations?.forEach((url) => {
+      loader.add(url, url, (resource) => {
+        const { spineData } = resource;
+        if (!spineData) throw new Error('spineData is not defined');
+        spineData.animations.forEach((animation) => {
+          loader.resources[animation.name] = resource;
+        });
+      });
+    });
+    return new Promise((resolve) => loader.load(() => resolve()));
   }
 
   public get<TKey extends keyof ContextStore>(key: TKey): ContextStore[TKey] {
@@ -78,5 +107,7 @@ export class Context {
   public stop(): void {
     this.app.destroy(true);
     this.resizeManager.stop();
+    Loader.shared.reset();
+    utils.destroyTextureCache();
   }
 }
