@@ -4,6 +4,39 @@ import { Spine } from 'pixi-spine';
 import { Cell, CELL_HEIGHT, CELL_WIDTH, Context, NextAction, SymbolView } from '../game';
 import { fetchData } from '../server';
 
+const OFFSET = 150;
+
+const doubleOffset = OFFSET * 2;
+
+const coordinates = [
+  [-OFFSET, 0],
+  [OFFSET, 0],
+  [-OFFSET, -OFFSET],
+  [OFFSET, -OFFSET],
+  [-OFFSET, OFFSET],
+  [OFFSET, OFFSET],
+  [0, -OFFSET],
+  [0, OFFSET],
+  [-doubleOffset, -OFFSET],
+  [doubleOffset, -OFFSET],
+  [-doubleOffset, OFFSET],
+  [doubleOffset, OFFSET],
+  [-doubleOffset, 0],
+  [doubleOffset, 0],
+  [0, 0],
+];
+
+const textures = ['sym-01', 'sym-02', 'sym-03', 'sym-04', 'sym-05', 'sym-06', 'sym-07', 'sym-08'];
+const skeletons = [
+  'sym-01-idle',
+  'sym-02-idle',
+  'sym-03-idle',
+  'sym-04-idle',
+  'sym-05-idle',
+  'sym-06-idle',
+  'sym-0-idle',
+];
+
 export function createGrid(context: Context, next: NextAction) {
   const { world, props } = context;
   const cols = context.get('cols');
@@ -69,62 +102,42 @@ export function clear(context: Context, next: NextAction) {
   next();
 }
 
-export async function loadAssets(context: Context) {
-  await context.loadAssets('asset.json');
-  const { resources } = Loader.shared;
-  const OFFSET = 150;
-  const doubleOffset = OFFSET * 2;
+export function loadAssets(context: Context, next: NextAction) {
+  next();
+  context
+    .loadAssets('asset.json')
+    .then(() => {
+      const { resources } = Loader.shared;
+      const localCoordinates = [...coordinates];
 
-  const coordinates = [
-    [-OFFSET, 0],
-    [OFFSET, 0],
-    [-OFFSET, -OFFSET],
-    [OFFSET, -OFFSET],
-    [-OFFSET, OFFSET],
-    [OFFSET, OFFSET],
-    [0, -OFFSET],
-    [0, OFFSET],
-    [-doubleOffset, -OFFSET],
-    [doubleOffset, -OFFSET],
-    [-doubleOffset, OFFSET],
-    [doubleOffset, OFFSET],
-    [-doubleOffset, 0],
-    [doubleOffset, 0],
-    [0, 0],
-  ];
+      const sprites = textures.map((name) => {
+        const { texture } = resources[name];
+        if (!texture) throw new Error(`texture ${name} error`);
+        const sprite = new Sprite(texture);
+        sprite.anchor.set(0.5);
+        sprite.scale.set(0.5);
+        sprite.position.set(...localCoordinates.shift()!);
+        return sprite;
+      });
 
-  const sprites = ['sym-01', 'sym-02', 'sym-03', 'sym-04', 'sym-05', 'sym-06', 'sym-07', 'sym-08'].map((name) => {
-    const { texture } = resources[name];
-    if (!texture) throw new Error(`texture ${name} error`);
-    const sprite = new Sprite(texture);
-    sprite.anchor.set(0.5);
-    sprite.scale.set(0.5);
-    sprite.position.set(...coordinates.shift()!);
-    return sprite;
-  });
+      const spines = skeletons.map((name, index) => {
+        const { spineData } = resources[name];
+        if (!spineData) throw new Error(`spineData ${name} error`);
+        const spine = new Spine(spineData);
+        spine.scale.set(0.5);
+        spine.state.setAnimation(0, name, index > 3);
+        spine.position.set(...localCoordinates.shift()!);
+        return spine;
+      });
 
-  const spines = [
-    'sym-01-idle',
-    'sym-02-idle',
-    'sym-03-idle',
-    'sym-04-idle',
-    'sym-05-idle',
-    'sym-06-idle',
-    'sym-0-idle',
-  ].map((name, index) => {
-    const { spineData } = resources[name];
-    if (!spineData) throw new Error(`spineData ${name} error`);
-    const spine = new Spine(spineData);
-    spine.scale.set(0.5);
-    spine.state.setAnimation(0, name, index > 3);
-    spine.position.set(...coordinates.shift()!);
-    return spine;
-  });
+      const graphics = new Graphics().beginFill(0xcccccc).drawRect(0, 0, 800, 500).endFill();
+      graphics.pivot.set(graphics.width / 2, graphics.height / 2);
+      graphics.alpha = 0.8;
 
-  const graphics = new Graphics().beginFill(0xcccccc).drawRect(0, 0, 800, 500).endFill();
-  graphics.pivot.set(graphics.width / 2, graphics.height / 2);
-  graphics.alpha = 0.8;
-
-  context.world.testContainer.addChild(graphics, ...sprites, ...spines);
-  context.world.root.addChild(context.world.testContainer);
+      context.world.testContainer.addChild(graphics, ...sprites, ...spines);
+      context.world.root.addChild(context.world.testContainer);
+    })
+    .catch((error) => {
+      throw new Error(`${error}`);
+    });
 }

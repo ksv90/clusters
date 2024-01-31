@@ -16,7 +16,7 @@ export const createMachineConfig = <TContext extends Context>(): ServiceConfig<T
     states: {
       init: {
         entry: [series(createGrid), transition('COMPLETE')],
-        exit: [asyncSeries(loadAssets)],
+        exit: [series(loadAssets)],
         on: {
           COMPLETE: 'load',
         },
