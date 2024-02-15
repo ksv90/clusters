@@ -8,7 +8,7 @@ import { Scene, SceneProps } from './Scene';
 export function App() {
   const [showForm, setShowForm] = useState(false);
   const [showGame, setShowGame] = useState(false);
-  const [showTestContainer, setShowTestContainer] = useState(true);
+  const [showTestContainer, setShowTestContainer] = useState(false);
   const [scene, setScene] = useState({ cols: 5, rows: 3, symbols: 5, clusterSize: 3 });
 
   const playClickButtonHandler = () => {
@@ -28,7 +28,6 @@ export function App() {
     setScene(sceneData);
     setShowForm(false);
     setShowGame(true);
-    setShowTestContainer(true);
   };
 
   const closeFormClickHandler = () => {
