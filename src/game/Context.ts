@@ -48,7 +48,7 @@ export class Context {
     };
 
     this.app = new Application({
-      backgroundColor: 0x555555,
+      backgroundColor: 0x555556,
       resolution: Math.min(Math.max(globalThis.devicePixelRatio, 1), 2),
     });
 
