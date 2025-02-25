@@ -96,8 +96,8 @@ export class Context {
     this.store[key] = value;
   }
 
-  public has<TKey extends keyof ContextStore>(key: unknown): key is TKey {
-    return typeof key === 'string' && key in this.store;
+  public has<TKey extends keyof ContextStore>(key: string): key is TKey {
+    return key in this.store;
   }
 
   public start(): void {
