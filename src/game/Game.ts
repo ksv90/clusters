@@ -41,7 +41,7 @@ export class Game<TEventObject extends GameEventObject> {
 
   public stop(): void {
     this.service.stop();
-    //this.context.stop(); //! Закоментил, потому что, после play game - выходили обьязьянки.
+    this.context.stop();
   }
 
   public next(): void {
