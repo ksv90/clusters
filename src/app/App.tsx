@@ -20,10 +20,6 @@ export function App() {
     setShowTestContainer(true);
   };
 
-  const testClickButtonHandler = () => {
-    setShowTestContainer((prev) => !prev);
-  };
-
   const createGameHandler = (sceneData: SceneProps['option']) => {
     setScene(sceneData);
     setShowForm(false);
@@ -34,22 +30,14 @@ export function App() {
     setShowForm(false);
   };
 
-  const testContainer = showGame && (
-    <ClickButton
-      title={showTestContainer ? 'Hide test container' : 'Show test container'}
-      onClick={testClickButtonHandler}
-    />
-  );
-
   return (
     <>
       {showGame && <Scene showTestContainer={showTestContainer} option={scene} />}
       <div className={styles['head-container']}>
-        <h1>Clusters</h1>
+        <h1>Clusters - играй в настоящую</h1>
         <p className={[styles['left-align']].join()}>
           <ClickButton title="Play game" onClick={playClickButtonHandler} />
           <ClickButton title="Stop game" onClick={stopClickButtonHandler} />
-          {testContainer}
         </p>
       </div>
       {showForm && <CreateForm scene={scene} onSend={createGameHandler} onClose={closeFormClickHandler} />}
